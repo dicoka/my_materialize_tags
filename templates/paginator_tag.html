@@ -1,0 +1,35 @@
+{% load my_materialize_tags %}
+{% if is_paginated %}
+
+
+
+  <ul class="pagination">
+    {% if page_obj.number == 1 %}
+      <li class="disabled"><a ><i class="material-icons">first_page</i></a></li>
+    {% else %}
+      <li class="waves-effect"><a href="?page=1{{ get_filter }}"><i class="material-icons">first_page</i></a></li>
+    {% endif %}
+    {% if page_obj.has_previous %}
+      <li class="waves-effect"><a href="?page={{ page_obj.previous_page_number }}{{ get_filter }}"><i class="material-icons">chevron_left</i></a></li>
+    {% else %}
+      <li class="disabled"><a ><i class="material-icons">chevron_left</i></a></li>
+    {% endif %}
+    {% for i in range_insplit %}
+      {% if page_obj.number == i %}
+        <li class="active teal"><a >{{ i }}</a></li>
+      {% else %}
+        <li class="waves-effect"><a href="?page={{ i }}{{ get_filter }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+      <li class="waves-effect"><a href="?page={{ page_obj.next_page_number }}{{ get_filter }}"><i class="material-icons">chevron_right</i></a></li>
+    {% else %}
+      <li class="disabled"><a ><i class="material-icons">chevron_right</i>
+    {% endif %}
+    {% if page_obj.number == paginator.page_range|last %}
+      <li class="disabled"><a ><i class="material-icons">last_page</i></a></li>
+    {% else %}
+      <li class="waves-effect"><a href="?page={{paginator.page_range|last}}{{ get_filter }}"><i class="material-icons">last_page</i></a></li>
+    {% endif %}
+  </ul>
+{% endif %}

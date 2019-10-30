@@ -1,0 +1,87 @@
+{% load my_materialize_tags %}
+
+{% if type == "textarea" %}
+<textarea {% id field %} class="{% if field.errors %}materialize-textarea invalid{% else %}materialize-textarea{% endif %} {{class}}">
+</textarea>
+<label for={{field.id_for_label}} >{{field.label}}</label>
+<!-- TextArea Значения и авторазмер -->
+<script>
+  {% if field.value%}$('#{{field.id_for_label}}').val('{{ field.value|safe }}');{% endif %}
+  M.textareaAutoResize($('#{{field.id_for_label}}'));
+</script>
+
+
+{% elif type == "select" %}
+<select {% id field %} class="{{class}}">
+{% for value, text in field.field.choices %}
+<option value="{{value}}"
+        {% if field.value %}{% if value|slugify == field.value|slugify %} selected{% endif %}
+        {% else %}{% if value|slugify == selected_value|slugify %} disabled selected{% endif %}{% endif %}
+>{{text}}</option>
+{% endfor %}
+</select>
+<label>{{field.label}}</label>
+
+
+{% elif type == "radio" %}
+{% for value, text in field.field.choices %}
+<p>
+    <label>
+        <input {% id field %} class="{{class}}" type="radio" value="{{value}}" {% if value|slugify == field.value|slugify or value|slugify == selected_value|slugify %} checked {% endif %} />
+        <span>{{text}}</span>
+    </label>
+</p>
+{% endfor %}
+
+
+{% elif type == "file" %}
+<div class="file-field input-field">
+  <div class="btn">
+    <span>File</span>
+    <input type="file">
+  </div>
+  <div class="file-path-wrapper">
+    <input class="file-path validate {% if field.errors %}invalid{% endif %}" type="text" placeholder="Загрузить новый файл" {% id field %}>
+    <span class="helper-text" {% if field.errors %}data-error="{{field.errors.as_text|cut:"* "}}" {% endif %}>{{field.help_text}}</span>
+  </div>
+</div>
+
+
+
+
+{% elif type == "checkbox" %}
+<label>
+<input type="checkbox" {% if field.value %}checked='checked' {% endif %}class="{{class}}" {% id field %}>
+<span>{{field.label}}</span>
+</label>
+
+{% elif type == "date" %}
+<input type="text"
+       {% id field %}
+       {% if init %}value='{{ init }}'
+       {% elif field.value %}value='{{ field.value }}'
+       {% endif %}
+       {% if field.errors %} placeholder=""{% endif %}
+       class="{{class}}{% if field.errors %} validate invalid{% else %} validate{% endif %}"
+>
+<label for={{field.id_for_label}} class="{% if field.value %}active{%endif%}">{{field.label}}</label>
+<span class="helper-text" {% if field.errors %}data-error="{{field.errors.as_text|cut:"* "}}" {% endif %}>{{field.help_text}}</span>
+
+
+
+{% else %}
+<input type="{{ type }}"
+       {% id field %}
+       {% if init %}value='{{ init }}'
+       {% elif field.value %}value='{{ field.value }}'
+       {% endif %}
+       {% if field.errors %} placeholder=""{% endif %}
+       class="{{class}}{% if field.errors %} validate invalid{% else %} validate{% endif %}"
+>
+<label for={{field.id_for_label}}>{{field.label}}</label>
+<span class="helper-text" {% if field.errors %}data-error="{{field.errors.as_text|cut:"* "}}"{% endif %}>{{field.help_text}}</span>
+
+
+
+
+{% endif %}
